@@ -19,7 +19,11 @@ app.use("/api/products", products)
 app.use("/api/auth", auth)
 
 app.get('/', (req, res) => {
-  res.send("My App begins")
+  res.json({message: "Welcome to OneSpot"})
+})
+
+app.get('*', (req, res) => {
+  res.json({message: "Cannot find the route"})
 })
 
 app.listen(PORT, () => {
