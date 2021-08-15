@@ -7,18 +7,14 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const { jwtSecret } = require("../config/keys");
 
-// get all users
-router.get("/", (req, res) => {
-  User.find()
-    .then((docs) => {
-      console.log(docs);
-      res.status(200).json(docs);
-    })
-    .catch((err) => {
-      res.status(500).json({
-        error: err,
-      });
-    });
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find()
+    res.json(users)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send("Server error")
+  }
 });
 
 // create new user
@@ -74,46 +70,5 @@ router.post(
     }
   }
 );
-
-// get one user
-router.get("/:id", (req, res) => {
-  const id = req.params.id;
-  User.findById(id)
-    .then((doc) => {
-      console.log(doc);
-      if (doc) {
-        res.status(200).json(doc);
-      } else {
-        res.status(404).json({ message: "Id not valid" });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ error: err });
-    });
-});
-
-// update a user
-router.patch("/:id",(req, res) => {
-  res.send("Patch Route")
-})
-
-// delete a user
-router.delete("/:id", (req, res) => {
-  const id = req.params.id;
-  User.remove({ _id: id })
-    .then((result) => {
-      res.status(200).json({
-        message: "Deleted",
-        result: result,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        error: err,
-      });
-    });
-});
 
 module.exports = router;
