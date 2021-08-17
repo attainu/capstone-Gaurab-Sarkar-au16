@@ -8,6 +8,10 @@ import NavBar from "./components/general/NavBar";
 //landing component
 import Background from "./components/landing/Background";
 
+// user components 
+import Register from "./components/auth/Register";
+import Login from "./components/auth/Login";
+
 import "./App.css";
 
 function App() {
@@ -17,6 +21,8 @@ function App() {
         <div className="App">
           <NavBar />
           <Route exact path="/" component={Background} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/login" component={Login} />
         </div>
       </Router>
     </Provider>
