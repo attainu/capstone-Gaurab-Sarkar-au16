@@ -22,6 +22,7 @@ class Register extends Component {
     // console.log(nextProps)
     if(nextProps && nextProps.auth.errors && nextProps.auth.errors.length > 0){
       nextProps.auth.errors.forEach(error => {
+        // console.log(error.msg)
         message.error(error.msg);
       });
     }
@@ -48,7 +49,7 @@ class Register extends Component {
       password,
       role,
     };
-    console.log(newUser)
+    // console.log(newUser)
     if(password === this.state.password2) {
       this.props.register(newUser)
     }else{

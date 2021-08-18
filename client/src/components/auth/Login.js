@@ -16,31 +16,33 @@ class Login extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentWillReceiveProps(nextProps){
-    console.log(nextProps)
-    // if(nextProps && nextProps.auth.errors && nextProps.auth.errors.length > 0){
-    //   nextProps.auth.errors.forEach(error => {
-    //     message.error(error.msg);
-    //   });
-    // }
-
-    if(nextProps.isAuthenticated){
-      message.success(`Welcome!!`)
-      setTimeout(()=>this.props.history.push("/"), 2000)
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (nextProps && nextProps.errors && nextProps.errors.length > 0) {
+      nextProps.errors.forEach(error => {
+        // console.log(error.msg)
+        message.error(error.msg);
+      });
     }
-  } 
+
+    if (nextProps.isAuthenticated) {
+      message.success(`Welcome!!`);
+      setTimeout(() => this.props.history.push("/"), 2000);
+    }
+  }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  onSubmit(e) {
-    const { email, password } = this.state
+  onSubmit() {
+    const { email, password } = this.state;
     const user = {
       email,
       password,
-    }
-    this.props.login(user)
+    };
+    // console.log("login",user)
+    this.props.login(user);
   }
 
   render() {
@@ -82,6 +84,7 @@ class Login extends Component {
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
+  errors: state.auth.errors,
 });
 
 export default connect(mapStateToProps, { login })(withRouter(Login));
