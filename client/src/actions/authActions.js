@@ -5,8 +5,10 @@ import {
   FAILURE_REGISTER,
   ERRORS,
   AUTH_ERROR,
+  SUCCESSFUL_LOGIN,
+  FAILURE_LOGIN,
 } from "./types";
-import { setAuthToken } from "../util/setAuthToken";
+import  setAuthToken  from "../util/setAuthToken";
 import { getServer } from "../util/index";
 
 // set a user
@@ -15,7 +17,7 @@ export const setCurrentUser = (user) => async (dispatch) => {
     setAuthToken(localStorage.token);
   }
   try {
-    const res = await axios.get(`${getServer}/api/auth`);
+    const res = await axios.get(`${getServer()}/api/auth`);
     dispatch({
       type: SET_CURRENT_USER,
       payload: res.data,
@@ -31,15 +33,16 @@ export const setCurrentUser = (user) => async (dispatch) => {
 export const register = (userData) => async (dispatch) => {
   const config = {
     headers: {
-      "Content-type": "application/json",
+      "Content-Type": "application/json",
     },
   };
   try {
-    const res = await axios.post(`${getServer}/api/users`, userData, config);
+    const res = await axios.post(`${getServer()}/api/users`, userData, config);
     dispatch({
       type: SUCCESSFUL_REGISTER,
       payload: res.data,
     });
+    dispatch(setCurrentUser())
   } catch (err) {
     const error = err.response.data.errors;
     if (error) {
@@ -52,5 +55,26 @@ export const register = (userData) => async (dispatch) => {
         type: FAILURE_REGISTER,
       });
     }
+  }
+};
+
+// login user
+export const login = (userData) => async (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  try {
+    const res = await axios.post(`${getServer()}/api/auth`, userData, config);
+    dispatch({
+      type: SUCCESSFUL_LOGIN,
+      payload: res.data,
+    });
+    dispatch(setCurrentUser())
+  } catch (err) {    
+    dispatch({
+      type: FAILURE_LOGIN,
+    });
   }
 };

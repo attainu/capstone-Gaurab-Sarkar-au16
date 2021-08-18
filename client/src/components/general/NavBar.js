@@ -11,10 +11,10 @@ const NavBar = () => {
       </h1>
       <ul>
         <li>
-          <Link to="">Merchants</Link>
+          <Link to="/register?role=merchant">Merchants</Link>
         </li>
         <li>
-          <Link to="/register">Register</Link>
+          <Link to="/register?role=customer">Register</Link>
         </li>
         <li>
           <Link to="/login">Login</Link>
