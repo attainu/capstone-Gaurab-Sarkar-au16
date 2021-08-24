@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import store from "./store";
@@ -6,35 +6,51 @@ import setAuthToken from "./util/setAuthToken";
 import { setCurrentUser } from "./actions/authActions";
 
 // importing general components
-import NavBar from "./components/general/NavBar";
+import ProtectedRoute from "./components/general/ProtectedRoute";
 
 //landing component
-import Background from "./components/landing/Background";
+import Landing from "./components/landing";
 
-// user components 
+// dashboard components
+import Dashboard from "./components/dashboard";
+import Home from "./components/dashboard/components/Home";
+import AddProduct from "./components/dashboard/components/AddProduct";
+
+// user components
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 
 import "./App.css";
-import "antd/dist/antd.css"
+import "antd/dist/antd.css";
 
-if(localStorage.token){
-  setAuthToken(localStorage.token)
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
 }
 
-function App() {
-  useEffect(()=>{
-    store.dispatch(setCurrentUser)
-  }, [])
-  
+function App(props) {
+  useEffect(() => {
+    store.dispatch(setCurrentUser);
+  }, []);
+
   return (
     <Provider store={store}>
       <Router>
         <div className="App">
-          <NavBar />
-          <Route exact path="/" component={Background} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/login" component={Login} />
+          <Route exact path="/" component={Landing} />
+          <Switch>
+            <ProtectedRoute
+              exact
+              path="/dashboard"
+              component={() => <Dashboard {...props} nestedRoute={Home} />}
+            />
+            <ProtectedRoute
+              exact
+              path="/dashboard/addProduct"
+              component={() => <Dashboard {...props} nestedRoute={AddProduct} />}
+            />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/login" component={Login} />
+          </Switch>
         </div>
       </Router>
     </Provider>
