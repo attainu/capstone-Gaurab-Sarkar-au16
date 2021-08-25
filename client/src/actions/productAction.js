@@ -16,3 +16,21 @@ export const getProducts = () => async dispatch => {
     })
   }
 }
+
+export const addProduct = (productData, history) => async (dispatch) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  try {
+    await axios
+      .post(`${getServer()}/api/products`, productData, config)
+      .then((_) => history.push("/dashboard/products"));
+  } catch (err) {
+    dispatch({
+      type: PRODUCT_ERROR,
+      payload: { status: err.response },
+    });
+  }
+};

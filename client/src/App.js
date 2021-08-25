@@ -15,6 +15,7 @@ import Landing from "./components/landing";
 import Dashboard from "./components/dashboard";
 import Home from "./components/dashboard/components/Home";
 import AddProduct from "./components/dashboard/components/AddProduct";
+import Products from "./components/dashboard/components/Products";
 
 // user components
 import Register from "./components/auth/Register";
@@ -48,6 +49,11 @@ function App(props) {
               path="/dashboard/addProduct"
               component={() => <Dashboard {...props} nestedRoute={AddProduct} />}
             />
+            <ProtectedRoute
+              exact
+              path="/dashboard/products"
+              component={() => <Dashboard {...props} nestedRoute={Products} />}
+            />            
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
           </Switch>

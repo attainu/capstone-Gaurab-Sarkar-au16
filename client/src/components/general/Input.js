@@ -1,9 +1,9 @@
 import React from "react";
 import propTypes from "prop-types";
 
-const Input = ({ type, name, placeholder, value, onChange }) => {
+const Input = ({ type, name, placeholder, value, onChange, style }) => {
   return (
-    <div>
+    <div style={{textAlign:"center"}}>
       <div className="form-group">
         <input
           type={type}
@@ -11,6 +11,7 @@ const Input = ({ type, name, placeholder, value, onChange }) => {
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          style={style}
         />
       </div>
     </div>
