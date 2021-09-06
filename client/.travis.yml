@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t gaurab2193/client -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true gaurab2193/client npm test -- --coverage
+
+after_sucess:
+  - openssl enc -aes256 -d -in serviceAccount.json.enc -out serviceAccount.json -k $SERVICE_KEY
+  - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
+
+  - source /home/travis/google-cloud-sdk/path.bash.inc
+  - gcloud auth activate-service-account --key-file serviceAccount.json
+  - gcloud config set project durable-student-324016
+  - gcloud config set compute/zone asia-south1-a
+  #build production grade dockerfile
+  - docker build -t gaurab2193/client .
+  - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_ID" --password-stdin
+  - docker push gaurab2193/client
+  - bash ./deploy.sh

@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getProducts } from "../../actions/productAction";
 import { Card } from "antd";
+import { getProducts } from "../../actions/productAction";
+import Product from "../general/Product";
+
 const { Meta } = Card;
 
 class Products extends Component {
@@ -11,7 +13,6 @@ class Products extends Component {
       products: [],
     };
   }
-
   componentDidMount() {
     this.props.getProducts();
   }
@@ -31,31 +32,20 @@ class Products extends Component {
       </ul>
     );
   };
-
   render() {
-    // console.log(this.props)
     const { products } = this.state;
-    console.log(products);
+    // console.log(products);
     return (
-      <div className="container">
+      <div className="container-flex">
         <div className="row">
           {products.map((product, index) => (
-            <Card
+            <Product
               key={index}
-              hoverable
-              style={{ width: 240 }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-                />
-              }
-            >
-              <Meta
-                title={product.name}
-                description={this.productDetails(product)}
-              />
-            </Card>
+              link={`products/${product._id}`}
+              product={product}
+              description={this.productDetails(product)}
+              thumbnail={product.thumbnail}
+            />
           ))}
         </div>
       </div>

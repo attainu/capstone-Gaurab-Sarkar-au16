@@ -7,12 +7,12 @@ import {
   AUTH_ERROR,
   SUCCESSFUL_LOGIN,
   FAILURE_LOGIN,
-  LOGOUT
+  LOGOUT,
 } from "./types";
+import { getServer } from "../util";
 import setAuthToken from "../util/setAuthToken";
-import { getServer } from "../util/index";
 
-// set a user
+//set a user
 export const setCurrentUser = (user) => async (dispatch) => {
   if (localStorage.token) {
     setAuthToken(localStorage.token);
@@ -23,14 +23,14 @@ export const setCurrentUser = (user) => async (dispatch) => {
       type: SET_CURRENT_USER,
       payload: res.data,
     });
-  } catch (error) {
+  } catch (err) {
     dispatch({
       type: AUTH_ERROR,
     });
   }
 };
 
-// register a user
+//register a user
 export const register = (userData) => async (dispatch) => {
   const config = {
     headers: {
@@ -51,7 +51,6 @@ export const register = (userData) => async (dispatch) => {
         type: ERRORS,
         payload: error,
       });
-      console.log("Action.Signup",error)
     } else {
       dispatch({
         type: FAILURE_REGISTER,
@@ -60,7 +59,7 @@ export const register = (userData) => async (dispatch) => {
   }
 };
 
-// login user
+//login user
 export const login = (userData) => async (dispatch) => {
   const config = {
     headers: {
@@ -80,8 +79,7 @@ export const login = (userData) => async (dispatch) => {
       dispatch({
         type: ERRORS,
         payload: error,
-      }); 
-      console.log("Action.SignIn",error)     
+      });
     } else {
       dispatch({
         type: FAILURE_LOGIN,
@@ -90,5 +88,4 @@ export const login = (userData) => async (dispatch) => {
   }
 };
 
-// logout user
-export const logout = () => (dispatch) => dispatch({type: LOGOUT})
+export const logout = () => (dispatch) => dispatch({ type: LOGOUT });

@@ -3,14 +3,22 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logout } from "../../actions/authActions";
 
-const NavBar = ({ auth: { isAuthenticated }, logout }) => {
-  const user = (
+const NavBar = ({ auth: { isAuthenticated, user }, logout }) => {
+  const authUser = (
     <ul>
       <li>
         <Link to="/dashboard">Dashboard</Link>
-      </li> 
+      </li>
+      {user.role !== "merchant" && (
+        <li>
+          <Link to="/register?role=merchant">Become A Merchants</Link>
+        </li>
+      )}
       <li>
-        <Link to="/register?role=merchant">Become A Merchant</Link>
+        <Link to="/cart">
+          {" "}
+          <i className="fas fa-cart-plus"></i>Cart
+        </Link>
       </li>
       <li>
         <Link onClick={logout} to="#!">
@@ -34,13 +42,13 @@ const NavBar = ({ auth: { isAuthenticated }, logout }) => {
     </ul>
   );
   return (
-    <nav className="navbar bg-main">
+    <nav className="main-navbar bg-main" style={{ zIndex: "999" }}>
       <h1>
         <Link to="">
           <i className="fas fa-store"></i> OneSpot
         </Link>
       </h1>
-      {isAuthenticated ? user : guest}
+      {isAuthenticated ? authUser : guest}
     </nav>
   );
 };

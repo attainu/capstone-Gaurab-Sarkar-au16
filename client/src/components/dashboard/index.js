@@ -63,7 +63,7 @@ class Dashboard extends Component {
               to="/"
             >
               <div className="sidebar-brand-text mx-3">
-                <i className="fas fa-store"></i> e-Shop
+                <i className="fas fa-store"></i> OneSpot
               </div>
             </Link>
 

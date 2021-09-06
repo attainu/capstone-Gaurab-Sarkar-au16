@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { message } from "antd";
 import Input from "../general/Input";
 import { register } from "../../actions/authActions";
-import { message } from "antd";
+import { decodeUser } from "../../util";
+import { addToCart } from "../../actions/cartActions";
 
 class Register extends Component {
   constructor() {
@@ -14,34 +16,57 @@ class Register extends Component {
       password: "",
       password2: "",
     };
+
     this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this)
+    this.onSubmit = this.onSubmit.bind(this);
   }
-  
-  componentWillReceiveProps(nextProps){
-    // console.log(nextProps)
-    if(nextProps && nextProps.auth.errors && nextProps.auth.errors.length > 0){
-      nextProps.auth.errors.forEach(error => {
-        // console.log(error.msg)
+
+  componentWillReceiveProps(nextProps) {
+    const search = this.props.location.search;
+    let split = search.split("redirect=");
+    const hasRirect = search.includes("redirect=");
+    split = split[split.length - 1];
+    console.log(split);
+    if (
+      nextProps &&
+      nextProps.auth.errors &&
+      nextProps.auth.errors.length > 0
+    ) {
+      nextProps.auth.errors.forEach((error) => {
         message.error(error.msg);
       });
     }
 
-    if(nextProps.auth.isAuthenticated){
-      message.success("Thank you for signing up")
-      setTimeout(()=>this.props.history.push("/"), 2000)
+    if (nextProps.auth.isAuthenticated) {
+      if (split && hasRirect) {
+        if (
+          split === "/cart" &&
+          localStorage.getItem("token") &&
+          localStorage.getItem("products")
+        ) {
+          const userId = decodeUser().user.id;
+          const cartProducts = JSON.parse(localStorage.getItem("products"));
+          const context = { products: cartProducts, userId };
+          this.props.addToCart(context);
+          localStorage.removeItem("products");
+        }
+        this.props.history.push(split);
+      } else {
+        message.success("Thank you for signing up");
+        setTimeout(() => this.props.history.push("/"), 3000);
+      }
     }
-  }  
+  }
 
   onChange(e) {
-    // console.log(e.target);
     this.setState({ [e.target.name]: e.target.value });
   }
 
   onSubmit() {
-    let role = this.props.location.search.split("?role=")
-    role = role[role.length - 1]
-    console.log(role)
+    let split = this.props.location.search.split("?role=");
+    split = split[split.length - 1].split("&");
+    const role = split[0];
+
     const { name, email, password } = this.state;
     const newUser = {
       name,
@@ -49,11 +74,10 @@ class Register extends Component {
       password,
       role,
     };
-    // console.log(newUser)
-    if(password === this.state.password2) {
-      this.props.register(newUser)
-    }else{
-      message.error("Passwords don't match")
+    if (password === this.state.password2) {
+      this.props.register(newUser);
+    } else {
+      message.error("Passwords must match");
     }
   }
 
@@ -101,14 +125,18 @@ class Register extends Component {
             onChange={this.onChange}
           />
         </div>
-        <button className="btn btn-primary" onClick={this.onSubmit}>Register</button>
+        <button className="btn btn-primary" onClick={this.onSubmit}>
+          {" "}
+          Register
+        </button>
       </div>
     );
   }
 }
-
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { register })(withRouter(Register));
+export default connect(mapStateToProps, { register, addToCart })(
+  withRouter(Register)
+);

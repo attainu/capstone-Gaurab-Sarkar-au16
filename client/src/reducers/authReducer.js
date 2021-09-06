@@ -1,8 +1,8 @@
 import {
   SET_CURRENT_USER,
   SUCCESSFUL_REGISTER,
-  ERRORS,
   FAILURE_REGISTER,
+  ERRORS,
   AUTH_ERROR,
   SUCCESSFUL_LOGIN,
   FAILURE_LOGIN,
@@ -17,7 +17,6 @@ const initialState = {
   errors: [],
 };
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default function (state = initialState, action) {
   const { payload } = action;
   switch (action.type) {
@@ -40,14 +39,12 @@ export default function (state = initialState, action) {
     case FAILURE_LOGIN:
     case LOGOUT:
       localStorage.removeItem("token");
-      // console.log("Reducer.Login")
       return {
         ...state,
         token: null,
         isAuthenticated: false,
       };
     case ERRORS:
-      localStorage.removeItem("token");
       return {
         ...state,
         errors: payload,
