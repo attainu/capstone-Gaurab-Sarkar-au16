@@ -24,6 +24,12 @@ const ProductSchema = new Schema({
   brand: {
     type: String,
   },
+  thumbnail: {
+    type: String,
+  },
+  images: {
+    type: [String],
+  },
   quantity: {
     type: Number,
     required: true,
@@ -39,5 +45,4 @@ const ProductSchema = new Schema({
 });
 
 const Product = mongoose.model("Product", ProductSchema);
-
 module.exports = Product;
